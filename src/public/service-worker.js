@@ -12,7 +12,8 @@ const PRECACHE_URLS = [
     'index.js',
     'assets/logo144.png',
     'manifest.webmanifest',
-    'service-worker.js'
+    'service-worker.js',
+    'assets/logo.ico',
 ];
 
 // The install handler takes care of precaching the resources we always need.
