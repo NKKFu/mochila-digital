@@ -1,7 +1,7 @@
-
+const HOST = 'http://192.168.0.8:5000'
 
 function LoadHTMLFromServer(id) {
-    fetch(`https://cf2c8564ab0c.ngrok.io/content/${id}`, {
+    fetch(`${HOST}/content/${id}`, {
         method: 'GET',
     }).then(response => {
         response.text().then(function (response) {
@@ -34,7 +34,7 @@ function loadHomePage() {
         })
     }
 
-    fetchTimeout('https://cf2c8564ab0c.ngrok.io/content', {
+    fetchTimeout(`${HOST}/content`, {
         method: 'GET',
     }, 500).then(response => {
         response.json().then(function (json) {
