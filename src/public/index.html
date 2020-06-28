@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <meta http-equiv="Cache-control" content="max-age=0">
+
+    <!-- CODELAB: Add iOS meta tags and icons -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Weather PWA">
+    <link rel="apple-touch-icon" href="./assets/logo144.png">
+    <link rel="shortcut icon" href="./assets/logo.ico">
+
+    <!-- CODELAB: Add description here -->
+    <meta name="description" content="Aplicativo para testar">
+
+    <!-- CODELAB: Add meta theme-color -->
+    <meta name="theme-color" content="#2F3BA2" />
+
+    <!-- CODELAB: Add link rel manifest -->
+    <link rel="manifest" href="./manifest.webmanifest">
+
+    <link rel="stylesheet" href="./style.css">
+    <script defer src="./index.js"></script>
+</head>
+
+<body onload="loadHomePage()">
+    <div id="header">
+        <h1>Mochila Digital</h1>
+    </div>
+    <div id="view-document">
+
+    </div>
+    <div id="footer">
+    </div>
+    <button class="add-button">Instalar Aplicativo</button>
+</body>
+
+<!-- Ignore that script -> PWA Service Worker register & manager -->
+<script>
+    // CODELAB: Register service worker.
+    if ('serviceWorker' in navigator) {
+        let deferredPrompt;
+        const addBtn = document.querySelector('.add-button');
+        addBtn.style.display = 'none';
+
+        // Aplicativo está instalado
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Prevent Chrome 67 and earlier from automatically showing the prompt
+            e.preventDefault();
+            // Stash the event so it can be triggered later.
+            deferredPrompt = e;
+            // Update UI to notify the user they can add to home screen
+            addBtn.style.display = 'block';
+
+            addBtn.addEventListener('click', (e) => {
+                // hide our user interface that shows our A2HS button
+                addBtn.style.display = 'none';
+                // Show the prompt
+                deferredPrompt.prompt();
+                // Wait for the user to respond to the prompt
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    deferredPrompt = null;
+                });
+            });
+        });
+
+        console.log('Called');
+        
+
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./service-worker.js')
+                .then((registration) => {
+                    console.log('Service worker registered.', registration);
+                });
+        });
+    }
+</script>
+
+</html>

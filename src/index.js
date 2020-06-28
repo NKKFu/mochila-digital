@@ -2,34 +2,32 @@ const express = require('express');
 const bodyParser = require('body-parser')
 const path = require('path');
 const app = express();
-const cors = require('cors')
+const cors = require('cors');
 
 const labelContentList = [
     {
-        'id': 123913,
-        'title': 'Introdução à java',
-        'description': 'Conheça o mundo java agora mesmo!',
-    },
-];
-
-const storedContentList = [
-    {
-        'id': 123913,
-        'content': `<h1>Introdução à Java</h1>
+        id: 123913,
+        title: 'Introdução à java',
+        description: 'Conheça o mundo java agora mesmo!',
+        content: `<h1>Introdução à Java</h1>
         <p>Professor: Nelson Kenmochi</p>
         <hr>
         <p>Eae galera! Sejam bem vindos ao curso de java!
         Já pegue o seu café e se ajeita nessa cadeira que
         hoje falaremos sobre a linguagem de programação Java!</p>`,
-    }
-]
+    },
+];
 
 app.use(bodyParser.urlencoded({ extended: true }))
 // app.use(bodyParser);
 // app.use(express.json());
 app.use(cors());
-app.use(express.static(path.join(__dirname, 'build')));
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json())
+
+app.get('/', (req, res) => {
+    return res.sendFile(path.join(__dirname, '..', 'public', 'index.html'))
+});
 
 app.get('/admin', (req, res) => {
     return res.send(`
@@ -58,23 +56,25 @@ app.get('/admin', (req, res) => {
             <hr>
             <h2>Conteúdos atuais</h2>
             ${labelContentList.map(item =>
-                `<b>${item.title}</b>
-                <p>${item.description}</p><hr>`
-            )}
+        `<b>${item.title}</b>
+            <p>${item.description}</p>
+            <hr>`
+    )}
         </body>
         </html>
     `);
 })
 
 app.get('/content', (req, res) => {
-    return res.send(labelContentList);
+    return res.send(
+        labelContentList,
+    );
 });
 
 app.get('/content/:id', (req, res) => {
     const contentID = req.params.id;
-    console.log(contentID);
 
-    const content = storedContentList.find(item => item['id'] === parseInt(contentID));
+    const content = labelContentList.find(item => item['id'] === parseInt(contentID));
     return res.send(content.content);
 });
 
@@ -86,20 +86,20 @@ app.post('/content', (req, res) => {
     labelContentList.push({
         id,
         title,
-        description
-    });
-
-    storedContentList.push({
-        id,
+        description,
         content
     });
 
-    return res.redirect('/admin');
+    console.log('Novo conteúdo');
+
+    res.redirect('/admin');
+    // return res.status(204).end();
 
     // return res.sendFile(path.join(__dirname, '..', 'public', 'admin.html'));
 })
 
 const PORT = process.env.PORT || 5000;
+// '192.168.0.8',
 app.listen(PORT, () => {
     console.log(`Running on http://localhost:${PORT}`);
 });
