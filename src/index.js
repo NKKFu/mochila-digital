@@ -1,5 +1,7 @@
 const express = require('express');
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
+const https = require('https');
+const fs = require('fs');
 const path = require('path');
 const app = express();
 const cors = require('cors');
@@ -19,8 +21,6 @@ const labelContentList = [
 ];
 
 app.use(bodyParser.urlencoded({ extended: true }))
-// app.use(bodyParser);
-// app.use(express.json());
 app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json())
@@ -98,8 +98,33 @@ app.post('/content', (req, res) => {
     // return res.sendFile(path.join(__dirname, '..', 'public', 'admin.html'));
 })
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
+
 // '192.168.0.8',
-app.listen(PORT, () => {
+/*app.listen(PORT, "192.168.0.8", () => {
     console.log(`Running on http://localhost:${PORT}`);
+});
+*/
+
+
+
+const handler = require('serve-handler');
+const http = require('http');
+ 
+/*
+const server = http.createServer(app, (request, response) => {
+  // You pass two more arguments for config and middleware
+  // More details here: https://github.com/vercel/serve-handler#options
+  return handler(request, response, {
+    "directoryListing": [
+        "/public/**"
+    ]
+  });
+})
+*/
+
+const server = http.createServer(app);
+
+server.listen(PORT, '0.0.0.0', () => {
+  console.log(`Running at http://localhost:${PORT}`);
 });

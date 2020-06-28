@@ -1,4 +1,4 @@
-const HOST = 'http://192.168.0.8:5000'
+const HOST = ''
 
 function LoadHTMLFromServer(id) {
     fetch(`${HOST}/content/${id}`, {
